@@ -23,11 +23,12 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Разрешаем серверу принимать JSON в теле запроса
-app.use(express.json());
+app.options('*', cors(corsOptions)); // ✅ добавь эту строку
 
 // Разрешаем серверу принимать JSON в теле запроса
 app.use(express.json());
+
+
 
 // --- "Интеллектуальная" часть ---
 
