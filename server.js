@@ -6,28 +6,18 @@ const PORT = process.env.PORT || 3000; // Порт, на котором буде
 
 // --- Настройка сервера ---
 
-// Разрешаем Cross-Origin Resource Sharing (CORS).
-// Это ОБЯЗАТЕЛЬНО, чтобы твой Mini App (Frontend) мог
-// отправлять запросы на твой Backend (они на разных доменах).
-// --- Настройка сервера ---
-
-// Разрешаем Cross-Origin Resource Sharing (CORS).
-// Это ОБЯЗАТЕЛЬНО, чтобы твой Mini App (Frontend) мог
-// отправлять запросы на твой Backend.
-
-// Указываем, какому домену мы доверяем (твой сайт на Netlify)
+// Указываем, какому домену мы доверяем (URL из вашего браузера)
 const corsOptions = {
-  origin: 'https://symphonious-dragon-6b690a.netlify.app',
+  // ИСПРАВЛЕНО: Этот URL взят из адресной строки на ваших скриншотах
+  origin: 'https://symphonious-dragon-6b690a.netlify.app', 
   optionsSuccessStatus: 200 
 };
 
+// Применяем настройки CORS. Этого ОДНОГО вызова достаточно.
 app.use(cors(corsOptions));
 
-app.options('*', cors(corsOptions)); // ✅ добавь эту строку
-
-// Разрешаем серверу принимать JSON в теле запроса
+// Разрешаем серверу принимать JSON в теле запроса (нужен только один раз)
 app.use(express.json());
-
 
 
 // --- "Интеллектуальная" часть ---
