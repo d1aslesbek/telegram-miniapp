@@ -2,21 +2,26 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
-const PORT = process.env.PORT || 3000; // Порт, на котором будет работать сервер
+const PORT = process.env.PORT || 3000;
 
 // --- Настройка сервера ---
 
-// Указываем, какому домену мы доверяем (URL из вашего браузера)
+// Настройка CORS для работы с вашим frontend на Netlify
 const corsOptions = {
-  // ИСПРАВЛЕНО: Этот URL взят из адресной строки на ваших скриншотах
-  origin: 'https://symphonious-dragon-6b690a.netlify.app', 
+  origin: 'https://symphonious-dragon-6b690a.netlify.app',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
   optionsSuccessStatus: 200 
 };
 
-// Применяем настройки CORS. Этого ОДНОГО вызова достаточно.
+// Применяем настройки CORS
 app.use(cors(corsOptions));
 
-// Разрешаем серверу принимать JSON в теле запроса (нужен только один раз)
+// Обработка preflight запросов (ВАЖНО для CORS!)
+app.options('*', cors(corsOptions));
+
+// Разрешаем серверу принимать JSON в теле запроса
 app.use(express.json());
 
 
@@ -62,7 +67,25 @@ async function getIntellectualAnswer(question) {
 }
 
 
-// --- API Эндпоинт (точка входа) ---
+// --- API Эндпоинты ---
+
+// Корневой route для проверки работы сервера
+app.get("/", (req, res) => {
+    res.json({ 
+        status: "Server is running", 
+        message: "Chat backend is alive!",
+        endpoints: {
+            chat: "POST /api/chat"
+        }
+    });
+});
+
+// GET для проверки эндпоинта /api/chat
+app.get("/api/chat", (req, res) => {
+    res.json({ 
+        error: "Используйте POST запрос с JSON телом: { question: 'ваш вопрос' }" 
+    });
+});
 
 // Создаем "эндпоинт" /api/chat. 
 // Именно на этот URL будет обращаться твой `app.js` (Frontend).
